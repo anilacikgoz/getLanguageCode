@@ -144,7 +144,7 @@ class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
             }
             else if(count($country->getOfficialLanguages()) >1)
             {
-                $formatPlural =sprintf("Country language codes:%s", implode(',',array_map(function($entry){return $entry->getLanguageCodeIso6391();}),$country->getOfficialLanguages()));
+                $formatPlural =sprintf("Country language codes:%s", implode(',',array_map(function($entry){return $entry->getLanguageCodeIso6391();},$country->getOfficialLanguages())));           
             }
         }
         if(!is_null($formatSingle))
@@ -156,7 +156,6 @@ class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
             return $formatPlural;
         }
         else return null;
-        
     }
     
 }
