@@ -14,8 +14,7 @@ ini_set('xdebug.var_display_max_children', '256');
 ini_set('xdebug.var_display_max_data', '1024');
 
 
-
-$countryTemp = new Country();
+/*$countryTemp = new Country();
 $languageTemp = new App\Src\YasLife\Language();
 $languageTemp->setLanguageCodeIso6391('tr');
 $languageTemp->setName('Turkish');
@@ -29,22 +28,24 @@ $languageTemp->setLanguageCodeIso6391("kr");
 $languageTemp->setName("Kurdish");
 $languageTemp->setNativeName("Kurdce");
 $languageTemp->setlanguageCodeIso6392("krd");
-$countryTemp->setOfficialLanguages($languageTemp);
+$countryTemp->setOfficialLanguages($languageTemp);*/
 
 
 if (count($argv) == 2) {
-    $a = $argv[1];
+    $countryName = $argv[1];
     
-    //$country = $languageService->getLanguageCode($a);
-    $country = $countryTemp;
+    $country = $languageService->getLanguageCode($countryName);
+    
     if (!empty($country)) {
-        //var_dump($country);
-        //die();
         print $languageService->formatLanguageCode($country);
-        
-        
     }
 } else if (count($argv) == 3) {
+    
+   $comparedCountries = $languageService->compareCountry($argv[1], $argv[2]);
+   print $languageService->formatComparedCountries($comparedCountries);
+   
+   
+   
     
 } else
     return null;

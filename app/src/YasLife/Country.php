@@ -37,7 +37,7 @@ class Country {
         return $this;   
     }
     
-    public function setCountryNames ( $countryName)
+    public function setCountryNames ($countryName)
     {
         $this->countryNames[] = $countryName;
         return $this;

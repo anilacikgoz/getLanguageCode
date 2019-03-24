@@ -4,11 +4,24 @@ use Language;
 use GuzzleHttp\Client;
 use App\Config\Parameters;
 
-class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
+final class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
 {
+    /**
+     * @var string rest service query type.
+     */
     private $restType;
+    /*
+     * @var GuzzleHttp\Client object for rest rest operation. 
+     */
     private $restClient;
+    /*
+     * @var App\Config\Parameters object for application parameters.
+.    */
     private $parameters;
+   
+    /*
+     * @var string Default rest service url.
+     */
     private $restUrl;
 
 
@@ -17,23 +30,9 @@ class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
         $this->restUrl = $this->parameters->getRestUrl();
     }
 
-    public function compareCountry( $langFirst,  $langSec) {
-        $matchedLanguages = array();
-        $countryFirst = $this->getLanguageCode($langFirst);
-        $countrySecond = $this->getLanguageCode($langSec);
-        foreach($countryFirst->getOfficialLanguages() as $languageFirst)
-        {
-            foreach ($countrySecond->getOfficialLanguages() as $languageSec )
-            {
-                if ($languageFirst->getLanguageCodeIso6391() == $languageSec->getLanguageCodeIso6391())
-                {
-                    $languageCodes = $languageFirst->getLanguageCodeIso6391();
-                }
-            }
-        }
-        
-        return $matchedLanguages;
-    }
+    /*
+     * @var $countryName
+     */
     public function getLanguageCode($countryName)    {
     
         $countryDetail = $this->getCountryDetail($countryName);
@@ -63,6 +62,7 @@ class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
             $officalLanguages = $country->getOfficialLanguages(); 
             for ( $i=0;$i<count($officalLanguages);$i++)
             {
+                
                $otherCountries = $this->getSameLanguageCountries($officalLanguages[$i]->getLanguageCodeIso6391(),$country->getCountryName()[0]);
                
                 foreach($otherCountries as $restCountry)
@@ -80,10 +80,32 @@ class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
         }
         return $country;
     }
+    public function compareCountry( $countryFirst,  $countrySecond) {
+        $comparedCountries = array();
+        $comparedCountries['first'] = $countryFirst;
+        $comparedCountries['second'] = $countrySecond;
+        $comparedCountries['status']  = false;
+        $countryFirst = $this->getLanguageCode($countryFirst);
+        $countrySecond = $this->getLanguageCode($countrySecond);
+        foreach($countryFirst->getOfficialLanguages() as $languageFirst)
+        {
+            foreach ($countrySecond->getOfficialLanguages() as $languageSec )
+            {
+             
+                if ($languageFirst->getLanguageCodeIso6391() == $languageSec->getLanguageCodeIso6391())
+                {
+                    $comparedCountries['status'] = true;
+                    return $comparedCountries;
+                }
+            }
+        }
+        
+        return $comparedCountries;
+    }
     private function getSameLanguageCountries( $languageCode,  $countryName)
     {
         $this->restType = $this->parameters->getRestType('byLang');
-        $this->restClient = new Client(['base_uri' => $this->restUrl.'/'.$this->restType.'/'.$languageCode]);
+        $this->restClient = new Client(['base_uri' => $this->restUrl.'/'.$this->restType.'/'.urlencode($languageCode)]);
         $result = $this->restClient->request('get');
         $countries = array();
         
@@ -111,7 +133,7 @@ class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
     private function getCountryDetail( $countryName)
     {
         $this->restType = $this->parameters->getRestType('byName');
-        $this->restClient = new Client(['base_uri' => $this->restUrl.'/'.$this->restType.'/'.$countryName.'?fullText=true']);
+        $this->restClient = new Client(['base_uri' => $this->restUrl.'/'.$this->restType.'/'.urlencode($countryName).'?fullText=true']);
         $result = $this->restClient->request('get');
         
         if (!empty($result->getBody()))
@@ -129,22 +151,49 @@ class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
         ;
     }
     
-    public function formatComparedCountries(Country $country) {
-        
+    public function formatComparedCountries($comparedCountries) {
+     
+        if (is_array($comparedCountries))
+        {
+            if(!empty($comparedCountries))
+            {
+                if ($comparedCountries['status'] === true)
+                {
+                   return sprintf("%s and %s speak the same language",$comparedCountries['first'],$comparedCountries['second']);
+            
+                }
+                else return sprintf("%s and %s do not speak the same language",$comparedCountries['first'],$comparedCountries['second']);
+            }
+        }
+        else 
+        {
+           return new \Exception('Parameter format not valid');
+        }
     }
     
     public function formatLanguageCode(Country $country) {
         $formatSingle=null;
         $formatPlural =null;
-        if(count($country)>0)
+        if(!empty($country))
         {
             if(count($country->getOfficialLanguages()) ==1)
             {
-                $formatSingle = sprintf("Country language code:%s",$country->getOfficialLanguages()[0]->getLanguageCodeIso6391());
+                $formatSingle = sprintf("Country language code:%s \n"
+                        . "%s speaks same language with thease countries:"
+                        . "%s",$country->getOfficialLanguages()[0]->getLanguageCodeIso6391(),$country->getCountryName()[0],implode(',',array_map(function($entry){return $entry->getCountryName()[0];},$country->getOfficialLanguages()[0]->getCountries())));
             }
             else if(count($country->getOfficialLanguages()) >1)
-            {
-                $formatPlural =sprintf("Country language codes:%s", implode(',',array_map(function($entry){return $entry->getLanguageCodeIso6391();},$country->getOfficialLanguages())));           
+            {                
+                $formatPlural =sprintf("Country language codes:%s \n"
+                        . "%s speaks same language with these countries:"
+                        . "%s", implode(',',array_map(function($entry){return $entry->getLanguageCodeIso6391();},$country->getOfficialLanguages())),$country->getCountryName()[0], implode(',',array_map(function($entry){
+                                    $lOtherCountries = array();
+                                    foreach($entry->getCountries() as $lCountry)
+                                        {
+                                         $lOtherCountries[] = $lCountry->getCountryName()[0];   
+                                        }   
+                                      return $lOtherCountries[0];
+                                    ;},$country->getOfficialLanguages())));           
             }
         }
         if(!is_null($formatSingle))
