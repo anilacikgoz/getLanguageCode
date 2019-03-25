@@ -22,34 +22,34 @@ final class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
     /*
      * @var string Default rest service url.
      */
-    private $restUrl;
+    private $baseRestUrl;
 
 
     public function __construct() {
         $this->parameters = new Parameters();
-        $this->restUrl = $this->parameters->getRestUrl();
+        $this->baseRestUrl = $this->parameters->getBaseRestUrl();
     }
 
     /*
      * @var $countryName
      */
-    public function getLanguageCode($countryName)    {
+    public function getCountryDetail($countryName)    {
     
-        $countryDetail = $this->getCountryDetail($countryName);
+        $countryRawData = $this->getCountryRawData($countryName);
         $countryLanguage = null;
         $country = null;
         $language = null;
-        if(!empty($countryDetail))
+        if(!empty($countryRawData))
         {
             $language  = new \App\Src\YasLife\Language();
             $country = new \App\Src\YasLife\Country();
-            $country->setCountryNames($countryDetail->{'name'});
-            foreach ($countryDetail->{'altSpellings'} as $name)
+            $country->setCountryNames($countryRawData->{'name'});
+            foreach ($countryRawData->{'altSpellings'} as $name)
             {
                 $country->setCountryNames($name);
             }
             
-            foreach ($countryDetail->{'languages'} as $language)
+            foreach ($countryRawData->{'languages'} as $language)
             {
                 $countryLanguage = new \App\Src\YasLife\Language();
                 $countryLanguage->setLanguageCodeIso6391($language->{'iso639_1'});
@@ -85,8 +85,8 @@ final class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
         $comparedCountries['first'] = $countryFirst;
         $comparedCountries['second'] = $countrySecond;
         $comparedCountries['status']  = false;
-        $countryFirst = $this->getLanguageCode($countryFirst);
-        $countrySecond = $this->getLanguageCode($countrySecond);
+        $countryFirst = $this->getCountryDetail($countryFirst);
+        $countrySecond = $this->getCountryDetail($countrySecond);
         foreach($countryFirst->getOfficialLanguages() as $languageFirst)
         {
             foreach ($countrySecond->getOfficialLanguages() as $languageSec )
@@ -105,19 +105,19 @@ final class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
     private function getSameLanguageCountries( $languageCode,  $countryName)
     {
         $this->restType = $this->parameters->getRestType('byLang');
-        $this->restClient = new Client(['base_uri' => $this->restUrl.'/'.$this->restType.'/'.urlencode($languageCode)]);
+        $this->restClient = new Client(['base_uri' => $this->baseRestUrl.'/'.$this->restType.'/'.urlencode($languageCode)]);
         $result = $this->restClient->request('get');
         $countries = array();
-        
+
         if (!empty($result->getBody()))
         {
            $retObject = json_decode($result->getBody()->getContents());
-           
+
            if (is_array($retObject)&& !empty($retObject))
            {
              foreach ($retObject as $country)
              {
-                 
+
                if ($country->{'name'}!= $countryName && empty(array_filter($country->{'altSpellings'}, function($v) use($countryName)
                             {
                               return $v == $countryName;
@@ -128,28 +128,36 @@ final class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
              }
            }
         }
+
+        
         return $countries;
     }
-    private function getCountryDetail( $countryName)
+    private function getCountryRawData( $countryName)
     {
+        $result = null;
         $this->restType = $this->parameters->getRestType('byName');
-        $this->restClient = new Client(['base_uri' => $this->restUrl.'/'.$this->restType.'/'.urlencode($countryName).'?fullText=true']);
-        $result = $this->restClient->request('get');
-        
-        if (!empty($result->getBody()))
-        {
-           $retObject = json_decode($result->getBody()->getContents());
-           if (is_array($retObject)&& !empty($retObject))
-           {
-               return $retObject[0];
-           }
-           else return null;
+        $this->restClient = new Client(['base_uri' => $this->baseRestUrl.'/'.$this->restType.'/'.urlencode($countryName).'?fullText=true']);
+        try{
+            $result = $this->restClient->request('get');
+            if (isset($result) && !empty($result->getBody()))
+            {
+               $retObject = json_decode($result->getBody()->getContents());
+               if (is_array($retObject)&& !empty($retObject))
+               {
+                   return $retObject[0];
+               }
+               else return null;
+            }
+            else return null;
         }
-     }
-
-    public function getOtherCountries( $languageCode) {
-        ;
+        catch (\GuzzleHttp\Exception\ClientException $ex)
+        {
+            throw new \Exception(sprintf('There is no data return from this country. Typing might be wrong. Country name: %s',$countryName));
+        }
+        
     }
+
+  
     
     public function formatComparedCountries($comparedCountries) {
      

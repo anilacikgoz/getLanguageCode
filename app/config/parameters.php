@@ -2,12 +2,12 @@
 namespace App\Config;
 class Parameters
 {
-private   $restUrl = 'https://restcountries.eu/rest/v2';
+private   $baseRestUrl = 'https://restcountries.eu/rest/v2';
 private   $restType = array ('byName' => 'name',
 							'byLang' => 'lang');
-public function getRestUrl()
+public function getBaseRestUrl()
 {
-	return $this->restUrl;
+	return $this->baseRestUrl;
 }
 
 public function getRestType($type)
@@ -20,5 +20,8 @@ public function getRestType($type)
         {
             return null ;
         }
-}	
+}
+
+
+
 }
