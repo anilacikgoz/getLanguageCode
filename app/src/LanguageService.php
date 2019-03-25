@@ -68,7 +68,7 @@ final class LanguageService implements \App\Src\LanguageServiceInterface {
      * @return array $retObject  
      * @throws \GuzzleHttp\Exception\ClientException
      */
-    private function getCountryRawData($countryName): array {
+    private function getCountryRawData($countryName)    {
         $result = null;
         $this->restType = $this->parameters->getRestType('byName');
         $this->restClient = new Client(['base_uri' => $this->baseRestUrl . '/' . $this->restType . '/' . urlencode($countryName) . '?fullText=true']);
