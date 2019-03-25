@@ -2,17 +2,13 @@
 
 namespace App\Test;
 
-use SebastianBergmannann\CodeCoverage;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
 use App\Src\LanguageService;
 use App\Src\Country;
-use App\Src\Language;
 
 /**
- * Description of TestLanguageService
  * Test processing for \App\Src\LanguageService class
- * @author anila
  */
 final class TestLanguageService extends TestCase {
 
