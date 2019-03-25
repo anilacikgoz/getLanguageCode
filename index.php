@@ -1,10 +1,8 @@
 <?php
-
 require './app/bootstrap.php';
 use App\Src\LanguageService;
-use App\Src\Country;
 global $argc, $argv;
-$languageService = new App\Src\YasLife\LanguageService();
+$languageService = new LanguageService();
 if ($argc == 2) {
     
     $countryName = $argv[1];
