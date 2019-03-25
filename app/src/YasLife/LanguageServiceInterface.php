@@ -40,7 +40,6 @@ interface LanguageServiceInterface
     /**
      * Returns formatted string of compared two countries about if they are using same language or not. 
      * @param \App\Src\YasLife\Country $country
-     *
      */
     public function formatComparedCountries(\App\Src\YasLife\Country $country);
     
