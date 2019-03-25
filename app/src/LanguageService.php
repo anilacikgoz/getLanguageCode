@@ -160,7 +160,7 @@ final class LanguageService implements \App\Src\LanguageServiceInterface {
             }
         }
         else {
-            return new \Exception('Parameter format not valid');
+            throw new \Exception('Parameter format not valid');
         }
     }
 
