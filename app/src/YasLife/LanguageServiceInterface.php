@@ -3,14 +3,14 @@
 namespace App\Src\YasLife;
 
     /**
-     * Service interface for main function about quering operations.
+     * Service interface for main functions of quering operations.
      */
  
 interface LanguageServiceInterface
 {
     
     /**
-     * Returns all country object 
+     * Returns country object from json array of rest service
      * @param string $countryName
      * @return \App\Src\YasLife\Country 
      *  
@@ -18,7 +18,7 @@ interface LanguageServiceInterface
     public function getCountryDetail($countryName);
   
     /**
-     * Returns $comparedCountries array of compared two country about if they are using same language or not
+     * Returns $comparedCountries array of compared two countries about if they are using same language or not
      * @param string $firstCountry
      * @param string $secondCountry
      * * @return array $comparedCountries
@@ -38,7 +38,7 @@ interface LanguageServiceInterface
     public function formatLanguageCode(\App\Src\YasLife\Country $country);
     
     /*
-     * Returns formatted string of compared two country about if they are using same language or not. 
+     * Returns formatted string of compared two countries about if they are using same language or not. 
      * @param \App\Src\YasLife\Country $country
      *
      */

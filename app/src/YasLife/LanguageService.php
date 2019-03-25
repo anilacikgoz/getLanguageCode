@@ -29,6 +29,76 @@ final class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
         $this->parameters = new Parameters();
         $this->baseRestUrl = $this->parameters->getBaseRestUrl();
     }
+    
+         /**
+     * Returns countries name which are using the same language.
+     * @param string  $languageCode
+     * @param string $countryName
+     * @return array  $countries
+     * 
+     */
+    private function getSameLanguageCountries( $languageCode,  $countryName) :array
+    {
+        $this->restType = $this->parameters->getRestType('byLang');
+        $this->restClient = new Client(['base_uri' => $this->baseRestUrl.'/'.$this->restType.'/'.urlencode($languageCode)]);
+        $result = $this->restClient->request('get');
+        $countries = array();
+
+        if (!empty($result->getBody()))
+        {
+           $retObject = json_decode($result->getBody()->getContents());
+
+           if (is_array($retObject)&& !empty($retObject))
+           {
+             foreach ($retObject as $country)
+             {
+
+               if ($country->{'name'}!= $countryName && empty(array_filter($country->{'altSpellings'}, function($v) use($countryName)
+                            {
+                              return $v == $countryName;
+                            })))
+               { 
+                 $countries[] = $country;
+               }
+             }
+           }
+        }
+
+        
+        return $countries;
+    }
+    
+    /**
+     * Returns decoded json array from rest service. 
+     * @param string $countryName 
+     * @return array $retObject  
+     * @throws \GuzzleHttp\Exception\ClientException
+     */
+    private function getCountryRawData( $countryName)
+    {
+        $result = null;
+        $this->restType = $this->parameters->getRestType('byName');
+        $this->restClient = new Client(['base_uri' => $this->baseRestUrl.'/'.$this->restType.'/'.urlencode($countryName).'?fullText=true']);
+        try{
+            $result = $this->restClient->request('get');
+            if (isset($result) && !empty($result->getBody()))
+            {
+               $retObject = json_decode($result->getBody()->getContents());
+               if (is_array($retObject)&& !empty($retObject))
+               {
+                   return $retObject[0];
+               }
+               else return null;
+            }
+            else return null;
+        }
+        catch (\GuzzleHttp\Exception\ClientException $ex)
+        {
+            throw new \Exception(sprintf('There is no data returned from this country. Country name might be misspelled. Country name: %s',$countryName));
+        }
+        
+    }
+    
     public function getCountryDetail($countryName) : Country   {
     
         $countryRawData = $this->getCountryRawData($countryName);
@@ -153,75 +223,6 @@ final class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
             return $formatPlural;
         }
         else return null;
-    }
-    
-     /**
-     * Returns countries name which are using the same language.
-     * @param string  $languageCode
-     * @param string $countryName
-     * @return array  $countries
-     * 
-     */
-    private function getSameLanguageCountries( $languageCode,  $countryName) :array
-    {
-        $this->restType = $this->parameters->getRestType('byLang');
-        $this->restClient = new Client(['base_uri' => $this->baseRestUrl.'/'.$this->restType.'/'.urlencode($languageCode)]);
-        $result = $this->restClient->request('get');
-        $countries = array();
-
-        if (!empty($result->getBody()))
-        {
-           $retObject = json_decode($result->getBody()->getContents());
-
-           if (is_array($retObject)&& !empty($retObject))
-           {
-             foreach ($retObject as $country)
-             {
-
-               if ($country->{'name'}!= $countryName && empty(array_filter($country->{'altSpellings'}, function($v) use($countryName)
-                            {
-                              return $v == $countryName;
-                            })))
-               { 
-                 $countries[] = $country;
-               }
-             }
-           }
-        }
-
-        
-        return $countries;
-    }
-    
-    /**
-     * Returns decoded json array from rest service. 
-     * @param string $countryName 
-     * @return array $retObject  
-     * @throws \GuzzleHttp\Exception\ClientException
-     */
-    private function getCountryRawData( $countryName)
-    {
-        $result = null;
-        $this->restType = $this->parameters->getRestType('byName');
-        $this->restClient = new Client(['base_uri' => $this->baseRestUrl.'/'.$this->restType.'/'.urlencode($countryName).'?fullText=true']);
-        try{
-            $result = $this->restClient->request('get');
-            if (isset($result) && !empty($result->getBody()))
-            {
-               $retObject = json_decode($result->getBody()->getContents());
-               if (is_array($retObject)&& !empty($retObject))
-               {
-                   return $retObject[0];
-               }
-               else return null;
-            }
-            else return null;
-        }
-        catch (\GuzzleHttp\Exception\ClientException $ex)
-        {
-            throw new \Exception(sprintf('There is no data returned from this country. Country name might be misspelled. Country name: %s',$countryName));
-        }
-        
     }
 }
 
