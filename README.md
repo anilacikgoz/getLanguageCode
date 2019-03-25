@@ -47,7 +47,7 @@ interface LanguageServiceInterface
      */
     public function formatLanguageCode(\App\Src\YasLife\Country $country);
     
-    /*
+    /**
      * Returns formatted string of compared two countries about if they are using same language or not. 
      * @param \App\Src\YasLife\Country $country
      *
