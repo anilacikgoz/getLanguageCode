@@ -170,7 +170,7 @@ final class LanguageService implements \App\Src\LanguageServiceInterface {
         if (!empty($country)) {
             if (count($country->getOfficialLanguages()) == 1) {
                 $formatSingle = sprintf("Country language code:%s \n"
-                        . "%s speaks same language with thease countries:"
+                        . "%s speaks same language with these countries:"
                         . "%s", $country->getOfficialLanguages()[0]->getLanguageCodeIso6391(), $country->getCountryName()[0], implode(',', array_map(function($entry) {
                                     return $entry->getCountryName()[0];
                                 }, $country->getOfficialLanguages()[0]->getCountries())));
