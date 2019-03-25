@@ -1,8 +1,12 @@
 <?php 
 namespace App\Src\YasLife;
 use \App\Config ;
+/**
+ ** This object includes basic language information and which countries are using this language. 
+ */
 class Language{
 
+    
         protected $languageCodeIso6391;
         protected $languageCodeIso6392;
         protected $name;

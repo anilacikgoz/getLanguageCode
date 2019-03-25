@@ -1,5 +1,10 @@
 <?php 
 namespace App\Config;
+
+/**
+ * Parameter object returns rest service information. 
+ */
+
 class Parameters
 {
 private   $baseRestUrl = 'https://restcountries.eu/rest/v2';

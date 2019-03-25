@@ -2,15 +2,46 @@
 
 namespace App\Src\YasLife;
 
-interface LanguageServiceInterface
-{
     /**
-     * Service interface for quering country and language operations
+     * Service interface for main function about quering operations.
      */
  
+interface LanguageServiceInterface
+{
+    
+    /**
+     * Returns all country object 
+     * @param string $countryName
+     * @return \App\Src\YasLife\Country 
+     *  
+     */
     public function getCountryDetail($countryName);
+  
+    /**
+     * Returns $comparedCountries array of compared two country about if they are using same language or not
+     * @param string $firstCountry
+     * @param string $secondCountry
+     * * @return array $comparedCountries
+     *  -(string)$comparedCountries['first'] ;
+     *  -(string)$comparedCountries['second']
+     *  -(bool)$comparedCountries['status']
+     *  If compared countries are using the same language, $comparedCountries['status'] variable set true.  
+     */
+     
     public function compareCountry($firstCountry, $secondCountry);
+    
+    /**
+     * Returns formatted string for language code of a country 
+     * and its related countries which using the same language.
+     * @param \App\Src\YasLife\Country $country
+     */
     public function formatLanguageCode(\App\Src\YasLife\Country $country);
+    
+    /*
+     * Returns formatted string of compared two country about if they are using same language or not. 
+     * @param \App\Src\YasLife\Country $country
+     *
+     */
     public function formatComparedCountries(\App\Src\YasLife\Country $country);
     
 }

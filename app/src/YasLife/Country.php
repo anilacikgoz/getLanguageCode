@@ -1,20 +1,14 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace App\Src\YasLife;
 
-/**
- * Description of Country
- *
- * @author anila
+/*
+ * This object created for basic country data. 
+ * A country might be has more than one official language. 
+ * $officalLanguages has include all of the offical language of this country.
+ * $countryNames has include country name and alt spellings.
  */
+
 class Country {
-    //put your code here
     
     protected  $countryCode;
     protected  $officalLanguages;
