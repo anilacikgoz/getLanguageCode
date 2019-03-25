@@ -1,7 +1,11 @@
 # getLanguageCode
-*This project provides information about the official language and other countries that use that language for a selected country.
-*Used rest service(https://restcountries.eu/rest/v2) by Guzzle HTTP client.
-*It has an extensible object structure and using easily.
+
+- This project provides information about the official language and other countries that use that language for a selected country.
+
+- Used rest service(https://restcountries.eu/rest/v2) by Guzzle HTTP client.
+
+- It has an extensible object structure and using easily.
+
 
 ```php
     $languageService = new App\Src\YasLife\LanguageService();

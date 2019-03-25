@@ -9,7 +9,7 @@ if ($argc == 2) {
     
     $countryName = $argv[1];
     $country = $languageService->getCountryDetail($countryName);
-    print $languageService->formatLanguageCode($country);
+    print $languageService->formatLanguageCode($country);   
     
 } else if ($argc == 3) {
     
