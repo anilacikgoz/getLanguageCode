@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Src;
 
 /*
@@ -9,45 +10,39 @@ namespace App\Src;
  */
 
 class Country {
-    
-    protected  $countryCode;
-    protected  $officalLanguages;
-    protected  $countryNames; 
-    
-    
-    
-    function __construct()
-    {
 
+    protected $countryCode;
+    protected $officalLanguages;
+    protected $countryNames;
+
+    function __construct() {
+        
     }
-    public function setCountryCode( $countryCode)
-    {
+
+    public function setCountryCode($countryCode) {
         $this->countryCode = $countryCode;
     }
-    
-    public function setOfficialLanguages (Language $language)
-    {
+
+    public function setOfficialLanguages(Language $language) {
         $this->officalLanguages[] = $language;
-        return $this;   
+        return $this;
     }
-    
-    public function setCountryNames ($countryName)
-    {
+
+    public function setCountryNames($countryName) {
         $this->countryNames[] = $countryName;
         return $this;
     }
-    
-    public function getCounrtyCode()
-    {
+
+    public function getCounrtyCode() {
         return $this->countryCode;
-    } 
-    
-    public function getOfficialLanguages()
-    {
+    }
+
+    public function getOfficialLanguages() {
         return $this->officalLanguages;
     }
-    public function getCountryName()
-    {
+
+    public function getCountryName() {
         return $this->countryNames;
     }
+
 }
