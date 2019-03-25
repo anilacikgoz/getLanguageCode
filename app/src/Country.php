@@ -1,5 +1,5 @@
 <?php
-namespace App\Src\YasLife;
+namespace App\Src;
 
 /*
  * This object created for basic country data. 

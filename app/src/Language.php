@@ -1,6 +1,6 @@
 <?php 
-namespace App\Src\YasLife;
-use \App\Config ;
+namespace App\Src;
+use \App\Config;
 /**
  ** This object includes basic language information and which countries are using this language. 
  */

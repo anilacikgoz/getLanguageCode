@@ -1,10 +1,11 @@
 <?php
-namespace App\Src\YasLife;
-use Language;
+namespace App\Src;
+use App\Src\Language;
+use App\Src\Country;
 use GuzzleHttp\Client;
 use App\Config\Parameters;
 
-final class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
+final class LanguageService implements \App\Src\LanguageServiceInterface
 {
     /**
      * @var string rest service query type.
@@ -107,8 +108,8 @@ final class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
         $language = null;
         if(!empty($countryRawData))
         {
-            $language  = new \App\Src\YasLife\Language();
-            $country = new \App\Src\YasLife\Country();
+            $language  = new Language();
+            $country = new Country();
             $country->setCountryNames($countryRawData->{'name'});
             foreach ($countryRawData->{'altSpellings'} as $name)
             {
@@ -117,7 +118,7 @@ final class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
             
             foreach ($countryRawData->{'languages'} as $language)
             {
-                $countryLanguage = new \App\Src\YasLife\Language();
+                $countryLanguage = new Language();
                 $countryLanguage->setLanguageCodeIso6391($language->{'iso639_1'});
                 $countryLanguage->setLanguageCodeIso6392($language->{'iso639_2'});
                 $countryLanguage->setName($language->{'name'});
@@ -133,7 +134,7 @@ final class LanguageService implements \App\Src\YasLife\LanguageServiceInterface
                
                 foreach($otherCountries as $restCountry)
                 {
-                    $tempCountry = new \App\Src\YasLife\Country();
+                    $tempCountry = new Country();
                     $tempCountry->setCountryCode($restCountry->{'alpha2Code'});
                     $tempCountry->setCountryNames($restCountry->{'name'});
                     foreach ($restCountry->{'altSpellings'} as $name)

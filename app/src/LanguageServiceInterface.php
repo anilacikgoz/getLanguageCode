@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Src\YasLife;
+namespace App\Src;
 
     /**
      * Service interface for main functions of quering operations.
@@ -35,13 +35,13 @@ interface LanguageServiceInterface
      * and its related countries which using the same language.
      * @param \App\Src\YasLife\Country $country
      */
-    public function formatLanguageCode(\App\Src\YasLife\Country $country);
+    public function formatLanguageCode(\App\Src\Country $country);
     
     /**
      * Returns formatted string of compared two countries about if they are using same language or not. 
      * @param \App\Src\YasLife\Country $country
      */
-    public function formatComparedCountries(\App\Src\YasLife\Country $country);
+    public function formatComparedCountries(\App\Src\Country $country);
     
 }
 
