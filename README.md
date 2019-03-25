@@ -8,7 +8,7 @@
 
 
 ```php
-    $languageService = new App\Src\YasLife\LanguageService();
+    $languageService = new App\Src\LanguageService();
     $countryName = 'Germany';
     $country = $languageService->getCountryDetail($countryName);
     print $languageService->formatLanguageCode($country); 
@@ -22,7 +22,7 @@ interface LanguageServiceInterface
     /**
      * Returns country object from json array of rest service
      * @param string $countryName
-     * @return \App\Src\YasLife\Country 
+     * @return \App\Src\Country 
      *  
      */
     public function getCountryDetail($countryName);
@@ -43,16 +43,16 @@ interface LanguageServiceInterface
     /**
      * Returns formatted string for language code of a country 
      * and its related countries which using the same language.
-     * @param \App\Src\YasLife\Country $country
+     * @param \App\Src\Country $country
      */
-    public function formatLanguageCode(\App\Src\YasLife\Country $country);
+    public function formatLanguageCode(\App\Src\Country $country);
     
     /**
      * Returns formatted string of compared two countries about if they are using same language or not. 
-     * @param \App\Src\YasLife\Country $country
+     * @param \App\Src\Country $country
      *
      */
-    public function formatComparedCountries(\App\Src\YasLife\Country $country);
+    public function formatComparedCountries(\App\Src\Country $country);
     
 }
 ```
