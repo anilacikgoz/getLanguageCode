@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Test;
+namespace App\Tests;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
 use App\Src\LanguageService;
@@ -57,5 +57,4 @@ final class TestLanguageService extends TestCase {
     public function tearDown() {
         \Mockery::close();
     }
-}        $client = null;
-
+}
