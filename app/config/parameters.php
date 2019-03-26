@@ -2,7 +2,7 @@
 namespace App\Config;
 
 /**
- * Parameter object returns rest service information. 
+ * Parameters object returns rest service information. 
  */
 
 class Parameters
